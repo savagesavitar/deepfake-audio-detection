@@ -28,11 +28,17 @@ TF_AVAILABLE = False
 tf = None
 try:
     import sys
-    tf_path = r"C:\tf_install"
-    if tf_path not in sys.path:
-        sys.path.insert(0, tf_path)
-    import tensorflow as tf
-    TF_AVAILABLE = True
+    # Try standard import first (for Linux/Streamlit Cloud)
+    try:
+        import tensorflow as tf
+        TF_AVAILABLE = True
+    except ImportError:
+        # Fallback for local Windows with custom install path
+        tf_path = r"C:\tf_install"
+        if tf_path not in sys.path:
+            sys.path.insert(0, tf_path)
+        import tensorflow as tf
+        TF_AVAILABLE = True
 except ImportError:
     pass
 

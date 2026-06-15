@@ -699,6 +699,7 @@ def main():
         <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; font-size: 0.8rem; color: #94a3b8;">
             <strong>How to use:</strong><br>
             1. Upload an audio file<br>
+            &nbsp;&nbsp;&nbsp;OR Record live<br>
             2. Wait for analysis<br>
             3. View results<br><br>
             <strong>Supported formats:</strong><br>
@@ -768,48 +769,96 @@ def main():
     # =========================================================================
     st.markdown('<p class="section-header">🎤 Audio Analysis</p>', unsafe_allow_html=True)
     
-    # File upload
-    uploaded_file = st.file_uploader(
-        "Upload Audio File",
-        type=['wav', 'mp3', 'flac', 'ogg'],
-        help="Drag and drop or click to upload"
-    )
+    # Tabs for Upload vs Record
+    tab_upload, tab_record = st.tabs(["📁 Upload Audio", "🎙️ Record Live"])
     
-    if uploaded_file is not None:
+    uploaded_file = None
+    recorded_audio = None
+    
+    with tab_upload:
+        uploaded_file = st.file_uploader(
+            "Upload Audio File",
+            type=['wav', 'mp3', 'flac', 'ogg'],
+            help="Drag and drop or click to upload"
+        )
+    
+    with tab_record:
+        recorded_audio = st.audio_input(
+            "Record audio from microphone",
+            key="live_recorder"
+        )
+    
+    # Determine if we have audio to analyze
+    has_audio = uploaded_file is not None or recorded_audio is not None
+    
+    if has_audio:
         # Two-column layout for analysis
         col_analysis, col_results = st.columns([1, 1])
         
         with col_analysis:
-            st.markdown("### 📁 Uploaded Audio")
-            
-            # Audio info
-            file_details = {
-                "Filename": uploaded_file.name,
-                "File Size": f"{uploaded_file.size / 1024:.1f} KB",
-                "Upload Time": datetime.now().strftime("%H:%M:%S")
-            }
-            
-            for key, value in file_details.items():
-                st.markdown(f"**{key}:** {value}")
-            
-            # Audio player
-            st.markdown("### 🔊 Audio Player")
-            st.audio(uploaded_file, format='audio/wav')
-            
-            # Process audio
-            with st.spinner("Processing audio..."):
-                # Save temporarily
-                with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
-                    tmp_file.write(uploaded_file.read())
-                    tmp_path = tmp_file.name
+            if uploaded_file is not None:
+                st.markdown("### 📁 Uploaded Audio")
                 
-                config = load_config()
-                audio = load_and_preprocess_audio(
-                    tmp_path, 
-                    sr=config['sample_rate'],
-                    duration=audio_duration
-                )
-                os.unlink(tmp_path)
+                # Audio info
+                file_details = {
+                    "Filename": uploaded_file.name,
+                    "File Size": f"{uploaded_file.size / 1024:.1f} KB",
+                    "Upload Time": datetime.now().strftime("%H:%M:%S")
+                }
+                
+                for key, value in file_details.items():
+                    st.markdown(f"**{key}:** {value}")
+                
+                # Audio player
+                st.markdown("### 🔊 Audio Player")
+                st.audio(uploaded_file, format='audio/wav')
+                
+                # Process audio
+                with st.spinner("Processing audio..."):
+                    # Save temporarily
+                    with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
+                        tmp_file.write(uploaded_file.read())
+                        tmp_path = tmp_file.name
+                    
+                    config = load_config()
+                    audio = load_and_preprocess_audio(
+                        tmp_path, 
+                        sr=config['sample_rate'],
+                        duration=audio_duration
+                    )
+                    os.unlink(tmp_path)
+            
+            elif recorded_audio is not None:
+                st.markdown("### 🎙️ Recorded Audio")
+                
+                # Audio info
+                file_details = {
+                    "Source": "Live Recording",
+                    "File Size": f"{recorded_audio.size / 1024:.1f} KB",
+                    "Recorded At": datetime.now().strftime("%H:%M:%S")
+                }
+                
+                for key, value in file_details.items():
+                    st.markdown(f"**{key}:** {value}")
+                
+                # Audio player
+                st.markdown("### 🔊 Playback")
+                st.audio(recorded_audio, format='audio/wav')
+                
+                # Process audio
+                with st.spinner("Processing recorded audio..."):
+                    # Save temporarily
+                    with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
+                        tmp_file.write(recorded_audio.read())
+                        tmp_path = tmp_file.name
+                    
+                    config = load_config()
+                    audio = load_and_preprocess_audio(
+                        tmp_path, 
+                        sr=config['sample_rate'],
+                        duration=audio_duration
+                    )
+                    os.unlink(tmp_path)
             
             if audio is not None:
                 # Feature extraction
@@ -936,9 +985,9 @@ def main():
         st.markdown("""
         <div style="text-align: center; padding: 4rem 2rem; background: #f8fafc; border-radius: 16px; border: 2px dashed #cbd5e1;">
             <div style="font-size: 4rem; margin-bottom: 1rem;">🎤</div>
-            <h3 style="color: #374151; margin-bottom: 0.5rem;">Upload an Audio File</h3>
-            <p style="color: #6b7280; max-width: 400px; margin: 0 auto;">
-                Drag and drop an audio file here, or click to browse.
+            <h3 style="color: #374151; margin-bottom: 0.5rem;">Upload or Record Audio</h3>
+            <p style="color: #6b7280; max-width: 450px; margin: 0 auto;">
+                Upload an audio file, or use the Record tab to record directly from your microphone.
                 Supported formats: WAV, MP3, FLAC, OGG
             </p>
         </div>
@@ -954,8 +1003,8 @@ def main():
             st.markdown("""
             <div class="kpi-card" style="text-align: center;">
                 <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
-                <div style="font-weight: 600; color: #1f2937;">1. Upload</div>
-                <div style="font-size: 0.85rem; color: #6b7280;">Upload audio file</div>
+                <div style="font-weight: 600; color: #1f2937;">1. Input</div>
+                <div style="font-size: 0.85rem; color: #6b7280;">Upload or Record audio</div>
             </div>
             """, unsafe_allow_html=True)
         

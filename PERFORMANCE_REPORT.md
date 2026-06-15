@@ -14,9 +14,9 @@ This report documents the performance of the Deepfake Audio Detection system on 
 |----------|-------|
 | Dataset | Fake-or-Real (FoR) |
 | Source | Kaggle |
-| Total Samples | ~12,000 (balanced subset used) |
-| Real Samples | ~6,000 |
-| Fake Samples | ~6,000 |
+| Total Samples | 30,000 |
+| Real Samples | 15,000 |
+| Fake Samples | 15,000 |
 | Audio Format | WAV |
 | Sample Rate | 16 kHz |
 | Duration | 3 seconds (truncated/padded) |
@@ -25,9 +25,9 @@ This report documents the performance of the Deepfake Audio Detection system on 
 
 | Split | Percentage | Samples |
 |-------|------------|---------|
-| Training | 80% | ~9,600 |
-| Validation | 10% | ~1,200 |
-| Test | 10% | ~1,200 |
+| Training | 80% | 24,000 |
+| Validation | 10% | 3,000 |
+| Test | 10% | 3,000 |
 
 ### 1.3 Hardware Configuration
 

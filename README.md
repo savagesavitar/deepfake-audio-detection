@@ -72,8 +72,8 @@ Develop a machine learning/deep learning system capable of classifying speech re
 ```
 for-norm/
 └── training/
-    ├── real/          # Genuine human audio (~6,000 samples)
-    └── fake/          # AI-generated audio (~6,000 samples)
+    ├── real/          # Genuine human audio (~15,000 samples)
+    └── fake/          # AI-generated audio (~15,000 samples)
 ```
 
 **Preprocessing:**
@@ -276,8 +276,8 @@ Data Augmentation: Time stretching, pitch shifting, noise addition
 ```
               Predicted
               Fake    Real
-Actual Fake   [892]   [108]
-       Real   [75]    [925]
+Actual Fake   [547]   [53]
+       Real   [37]    [563]
 ```
 
 ### Visualizations
@@ -309,9 +309,13 @@ streamlit run app.py --server.port 8501
 
 ## 🎬 Demo
 
+### Live Demo
+
+**Deployed App:** [Streamlit Cloud](https://savagesavitar-deepfake-audio-detection-app-xxx.streamlit.app)
+
 ### Demo Video
 
-[Insert 2-minute demo video link here]
+[Demo video recording here]
 
 **Video Contents:**
 1. Overview of the project
@@ -328,25 +332,38 @@ streamlit run app.py --server.port 8501
 ```
 deepfake-audio-detection/
 ├── notebooks/
-│   └── deepfake_detection.ipynb    # Main Jupyter notebook
+│   ├── deepfake_detection.ipynb         # Local notebook
+│   └── deepfake_detection_colab.ipynb   # Colab notebook (30K samples)
 ├── models/
-│   ├── deepfake_cnn_lstm.h5        # Trained CNN+LSTM model
-│   ├── deepfake_xgboost.pkl        # Trained XGBoost model
-│   ├── scaler.pkl                  # Feature scaler
-│   └── config.pkl                  # Model configuration
+│   ├── deepfake_cnn_lstm_final.keras    # Trained CNN+LSTM model
+│   ├── deepfake_cnn_lstm_best.keras     # Best checkpoint
+│   ├── deepfake_xgboost.pkl             # Trained XGBoost model
+│   ├── scaler.pkl                       # Feature scaler
+│   ├── config.pkl                       # Model configuration
+│   └── label_encoder.pkl                # Label encoder
 ├── src/
-│   └── __init__.py                 # Package init
-├── figures/                        # Generated visualizations
-├── test_samples/                   # Sample test audio files
-├── app.py                          # Streamlit web application
-├── test_audio.py                   # Test script for new audio
-├── requirements.txt                # Python dependencies
-├── requirements_streamlit.txt      # Streamlit deployment deps
+│   ├── __init__.py
+│   ├── data_preprocessing.py
+│   ├── feature_extraction.py
+│   ├── model.py
+│   ├── train.py
+│   ├── evaluate.py
+│   └── utils.py
+├── test_samples/                        # Sample test audio files
+├── figures/                             # Generated visualizations
+├── app.py                               # Streamlit web application
+├── test_audio.py                        # Test script for new audio
+├── create_test_samples.py               # Generate test audio
+├── verify_project.py                    # Project verification
+├── requirements.txt                     # Python dependencies
+├── requirements_streamlit.txt           # Streamlit deployment deps
+├── runtime.txt                          # Python version for Streamlit
 ├── .streamlit/
-│   └── config.toml                 # Streamlit configuration
-├── README.md                       # Project documentation
-├── PERFORMANCE_REPORT.md           # Detailed metrics report
-└── .gitignore                      # Git ignore file
+│   └── config.toml                      # Streamlit configuration
+├── README.md                            # Project documentation
+├── PERFORMANCE_REPORT.md                # Detailed metrics report
+├── LICENSE                              # MIT License
+└── .gitignore                           # Git ignore file
 ```
 
 ---
@@ -465,10 +482,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 
-**Your Name**
-- Email: your.email@example.com
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourname)
+**Deepfake Audio Detection Team**
+- GitHub: [@savagesavitar](https://github.com/savagesavitar)
 
 ---
 

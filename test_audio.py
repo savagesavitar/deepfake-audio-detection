@@ -17,11 +17,23 @@ from pathlib import Path
 # Try to import TensorFlow with custom path
 try:
     import sys
-    tf_path = r"C:\tf_install"
-    if tf_path not in sys.path:
-        sys.path.insert(0, tf_path)
-    import tensorflow as tf
-    TF_AVAILABLE = True
+    # Ensure system numpy loads first
+    try:
+        import numpy as _np_check
+        del _np_check
+    except ImportError:
+        pass
+    
+    # Try standard import first
+    try:
+        import tensorflow as tf
+        TF_AVAILABLE = True
+    except ImportError:
+        tf_path = r"C:\tf_install"
+        if tf_path not in sys.path:
+            sys.path.insert(0, tf_path)
+        import tensorflow as tf
+        TF_AVAILABLE = True
 except ImportError:
     TF_AVAILABLE = False
     print("Warning: TensorFlow not available. CNN model won't work.")

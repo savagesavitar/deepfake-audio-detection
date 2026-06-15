@@ -24,9 +24,18 @@ from datetime import datetime, timedelta
 # TensorFlow import with fallback
 TF_AVAILABLE = False
 tf = None
+
+# Ensure system numpy loads first (before TensorFlow's bundled numpy)
+try:
+    import numpy as np_check
+    del np_check
+except ImportError:
+    pass
+
 try:
     import sys
-    # Try standard import first (for Linux/Streamlit Cloud)
+    
+    # Try standard import first (Linux/Streamlit Cloud)
     try:
         import tensorflow as tf
         TF_AVAILABLE = True
@@ -35,8 +44,12 @@ try:
         tf_path = r"C:\tf_install"
         if tf_path not in sys.path:
             sys.path.insert(0, tf_path)
-        import tensorflow as tf
-        TF_AVAILABLE = True
+        try:
+            import tensorflow as tf
+            TF_AVAILABLE = True
+        except Exception:
+            if tf_path in sys.path:
+                sys.path.remove(tf_path)
 except ImportError:
     pass
 

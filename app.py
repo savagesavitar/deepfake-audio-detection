@@ -13,8 +13,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import librosa
-import librosa.display
-import matplotlib.pyplot as plt
 import soundfile as sf
 import joblib
 from pathlib import Path

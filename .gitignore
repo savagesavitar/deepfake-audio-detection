@@ -40,10 +40,17 @@ ENV/
 
 # Project specific
 data/
-models/*.h5
-models/*.pkl
-models/*.joblib
-*.wav
-*.mp3
-*.flac
-figures/*.png
+
+# Allow specific model files
+!models/*.keras
+!models/*.h5
+!models/scaler.pkl
+!models/config.pkl
+!models/label_encoder.pkl
+!models/deepfake_xgboost.pkl
+
+# Allow test samples
+!test_samples/*.wav
+
+# Allow figures
+!figures/*.png
